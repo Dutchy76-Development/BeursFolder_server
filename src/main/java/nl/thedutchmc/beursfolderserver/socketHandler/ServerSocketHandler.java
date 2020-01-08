@@ -108,20 +108,22 @@ public class ServerSocketHandler extends Thread {
 						System.out.println("Message received successfully!");
 
 						//Split the message into its individual components
-						//Format: emailLinkSuffix, companyName, phoneNumber, token, option number, option url
+						//Format: emailLinkSuffix, firstName, surName, companyName, phoneNumber, token, option number, option url
 						String[] messageReceivedComponents = messageReceived.split(",");
 						
 						String emailLinkSuffix = messageReceivedComponents[0];
-						String companyName = messageReceivedComponents[1];
-						String phoneNumber = messageReceivedComponents[2];
-						String token = messageReceivedComponents[3];
-						int optionNumber = Integer.valueOf(messageReceivedComponents[4]);
-						String optionURL = messageReceivedComponents[5];
+						String firstName = messageReceivedComponents[1];
+						String surName = messageReceivedComponents[2];
+						String companyName = messageReceivedComponents[3];
+						String phoneNumber = messageReceivedComponents[4];
+						String token = messageReceivedComponents[5];
+						int optionNumber = Integer.valueOf(messageReceivedComponents[6]);
+						String optionURL = messageReceivedComponents[7];
 						
 						
 						//Create the JS file responsible for redirecting etc.
 						CreateJSFile cjsf = new CreateJSFile();
-						cjsf.creatFile(emailLinkSuffix, companyName, phoneNumber, token, optionNumber, optionURL);
+						cjsf.creatFile(emailLinkSuffix, firstName, surName, companyName, phoneNumber, token, optionNumber, optionURL);
 					}
 				}
 			}

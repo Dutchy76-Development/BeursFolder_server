@@ -7,13 +7,11 @@ import nl.thedutchmc.beursfolderserver.BeursFolderServer;
 
 public class CreateJSFile {
 
-	public void creatFile(String fileName, String companyName, String phoneNumber, String token, int optionNumber, String optionURL) {
+	public void creatFile(String fileName, String firstName, String surName, String companyName, String phoneNumber, String token, int optionNumber, String optionURL) {
 		String rootPath = BeursFolderServer.WEBSERVER_PATH;
 		String redirectPath = rootPath + BeursFolderServer.REDIRECT_PATH;
-		String siteDomain = BeursFolderServer.SITE_DOMAIN;
 		
-		String redirectTo = siteDomain + BeursFolderServer.REDIRECT_PATH + optionURL;
-		System.out.println("Redirect to: " + redirectTo);
+		System.out.println("Redirect to: " + optionURL);
 		
 		
 		String filePath = redirectPath + fileName + ".html";
@@ -30,11 +28,64 @@ public class CreateJSFile {
 						+ 		"<title> GeneratedFile </title>\n"
 						+ 	"</head>\n"
 						+ 	"<script>\n"
-						+		"var companyName = \"" + companyName + "\"\n"
-						+		"var phoneNumber = \"" + phoneNumber + "\"\n"
-						+		"var token = \"" + token + "\"\n"
-						+		"var optionURL = \"" + optionURL + "\"\n"
-						+		"window.location = \"" + redirectTo + "\";"
+						+ "const MongoClient = require('mongodb').MongoClient;\r\n" + 
+						"const url = 'mongodb://db.beursfolder.mrfriendly.uk:27017'\r\n" + 
+						"const dbName = 'beursfolder'\r\n" + 
+						"const client = new MongoClient(url)\r\n" + 
+						"\r\n" + 
+						"const companyName = '" + companyName + "'\r\n" + 
+						"const phoneNumber = '" + phoneNumber + "'\r\n" + 
+						"const token = '" + token +"'\r\n" + 
+						"const optionUrl = '"  + optionURL + "'\r\n" +
+						"const firstName = '" + firstName +"'\r\n" + 
+						"const lastName = '" + surName + "'\r\n" +
+						"\r\n" + 
+						"const insertRedir = (db, callback) => {\r\n" + 
+						"  find({token:token}, (err, res) => {\r\n" + 
+						"    if(!res||res == null){\r\n" + 
+						"      collection.insert(\r\n" + 
+						"        {\"token\" : token, \"data\":\r\n" + 
+						"            [\r\n" + 
+						"              {\r\n" + 
+						"                companyName:companyName,\r\n" + 
+						"                phoneNumber:phoneNumber,\r\n" + 
+						"                firstName:'fname',\r\n" + 
+						"                lastName:'lname',\r\n" + 
+						"                optionUrl:optionUrl\r\n" + 
+						"              }\r\n" + 
+						"            ]\r\n" + 
+						"        }\r\n" + 
+						"      )\r\n" + 
+						"    } else{\r\n" + 
+						"      const info = res.info\r\n" + 
+						"      info.push([\r\n" + 
+						"        {\r\n" + 
+						"          companyName:companyName,\r\n" + 
+						"          phoneNumber:phoneNumber,\r\n" + 
+						"          firstName:'fname',\r\n" + 
+						"          lastName:'lname',\r\n" + 
+						"          optionUrl:optionUrl\r\n" + 
+						"        }\r\n" + 
+						"      ])\r\n" + 
+						"      collection.update(\r\n" + 
+						"        {token:token}, {$set:{\"info\":info}}\r\n" + 
+						"      )\r\n" + 
+						"    }\r\n" + 
+						"  })\r\n" + 
+						"  callback\r\n" + 
+						"}\r\n" + 
+						"\r\n" + 
+						"client.connect(err => {\r\n" + 
+						"  if(!(!err||err == null)){\r\n" + 
+						"    console.log('successful connect')\r\n" + 
+						"    const db = client.db(dbName)\r\n" + 
+						"    insertRedir(db, function(){\r\n" + 
+						"        client.close()\r\n" + 
+						"    })\r\n" + 
+						"\r\n" + 
+						"  }\r\n" + 
+						"\r\n" + 
+						"})"
 						+	"</script>\n"
 						+ 	"<body\n>"
 						+ 		"<p> test </p>\n"
