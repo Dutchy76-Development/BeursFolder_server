@@ -43,6 +43,8 @@ public class ServerSocketHandler extends Thread {
 					//Accept any incoming sockets
 					newClientSocket = serverSocket.accept();
 					
+					System.out.println("Accepted new client: " + newClientSocket.getInetAddress().getHostName().toString());
+					
 					//Start the ClientConnector Thread
 					ClientConnector cc = new ClientConnector(newClientSocket);
 					cc.start();
@@ -111,6 +113,7 @@ public class ServerSocketHandler extends Thread {
 						//Format: emailLinkSuffix, firstName, surName, companyName, phoneNumber, token, option number, option url
 						String[] messageReceivedComponents = messageReceived.split(",");
 						
+						try {
 						String emailLinkSuffix = messageReceivedComponents[0];
 						String firstName = messageReceivedComponents[1];
 						String surName = messageReceivedComponents[2];
@@ -120,10 +123,12 @@ public class ServerSocketHandler extends Thread {
 						int optionNumber = Integer.valueOf(messageReceivedComponents[6]);
 						String optionURL = messageReceivedComponents[7];
 						
-						
 						//Create the JS file responsible for redirecting etc.
 						CreateJSFile cjsf = new CreateJSFile();
 						cjsf.creatFile(emailLinkSuffix, firstName, surName, companyName, phoneNumber, token, optionNumber, optionURL);
+						} catch(Exception e) {
+							System.err.println("There was an error reading the Received Array!");
+						}
 					}
 				}
 			}
